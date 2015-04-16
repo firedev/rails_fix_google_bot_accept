@@ -9,21 +9,21 @@ module RailsFixGoogleBotAccept
   #   - https://github.com/rails/rails/issues/4127
   #
   class GoogleBotAware
-  
+
     def initialize(app)
       @app = app
     end
-  
+
     def call(env)
       # If the request 'Content Accept' header indicates a '*/*' format,
       # we set the format to :html.
       # This is necessary for GoogleBot which requests / with '*/*;q=0.6' for example.
-      if env["HTTP_ACCEPT"] =~ %r%\*\/\*;q=\d\.\d%
+      if env["HTTP_ACCEPT"] =~ %r%\A(\*/\*;q=\d\.\d|: \*/\*)\Z%
         env["HTTP_ACCEPT"] = '*/*'
       end
-  
+
       @app.call(env)
     end
-  
+
   end
 end
